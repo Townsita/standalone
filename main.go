@@ -10,7 +10,11 @@ import (
 
 func main() {
 	da := dummy.New()
-	handler := townsita.New(da).GetHTTPHandler(os.Args)
+	c := townsita.NewConfig()
+	if err := c.Load(os.Args); err != nil {
+		log.Fatal(err)
+	}
+	handler := townsita.New(c, da).GetHTTPHandler()
 	http.Handle("/", handler)
 	if err := http.ListenAndServe(":8080", nil); err != nil {
 		log.Fatal("ListenAndServe: ", err)
